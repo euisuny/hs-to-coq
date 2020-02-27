@@ -3,18 +3,18 @@ include ../../common.mk
 OUT=lib
 
 MAINMODS = Main
-MODULES = Socket \
-					Socket/Address \
-					Socket/Handle \
-					Socket/Internal \
-					Socket/SockAddr \
-					Socket/ByteString \
-					Socket/If \
-					Socket/Name \
-					Socket/Syscall \
-					Socket/Fcntl \
-					Socket/Imports \
-					Socket/Shutdown
+MODULES = Network/Socket \
+					Network/Socket/Address \
+					Network/Socket/Handle \
+					Network/Socket/Internal \
+					Network/Socket/SockAddr \
+					Network/Socket/ByteString \
+					Network/Socket/If \
+					Network/Socket/Name \
+					Network/Socket/Syscall \
+					Network/Socket/Fcntl \
+					Network/Socket/Imports \
+					Network/Socket/Shutdown
 
 HANDMOD = NetworkTypes \
 					Divergence \
@@ -47,8 +47,8 @@ $(OUT)/README.md:
 	mkdir -p $(OUT)
 	mkdir -p deps
 	> $@
-	echo 'This directory contains a Coq’ified version of parts of GHC' >> $@
-	echo 'Do not edit files here! Instead, look in `examples/wc`.' >> $@
+	echo 'This directory contains a Coq’ified version of the Network library.' >> $@
+	echo 'Do not edit files here!' >> $@
 
 $(OUT)/edits:
 	mkdir -p $(OUT)
@@ -75,6 +75,8 @@ HS_TO_COQ_OPTS=\
 		 -N \
      -i Network \
 		 -I Network \
+		 -i Network/Socket \
+		 -I Network/Socket \
 		 -I include \
      -e ../../base/edits \
      -e ../containers/edits \
@@ -90,18 +92,15 @@ HS_TO_COQ_OPTS=\
 %.h2ci: %.v
 	test -e $@
 
-#%.hs : %.hsc
-#	stack --exec
-
-#%.h : %.h.in
-#	.
+%.hs : %.hsc
+	hsc2hs $@
 
 .SECONDEXPANSION:
 $(OUTFILES_GEN): $(OUT)/%.v : $$(wildcard module-edits/$$*/preamble.v) $$(wildcard module-edits/$$*/midamble.v)  $$(wildcard module-edits/$$*/edits) edits
 	$(HS_TO_COQ) $(addprefix -e , $(wildcard module-edits/$*/edits)) \
 	             $(addprefix -p , $(wildcard module-edits/$*/preamble.v)) \
 	             $(addprefix --midamble , $(wildcard module-edits/$*/midamble.v)) \
-		     $(HS_TO_COQ_OPTS) Network/$*.hs
+		     $(HS_TO_COQ_OPTS) $*.hs
 	test -e $@
 
 $(OUTFILES_MAN): $(OUT)/%.v : manual/%.v
