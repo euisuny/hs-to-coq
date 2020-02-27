@@ -1,1 +1,0 @@
-../manual/Divergence.v

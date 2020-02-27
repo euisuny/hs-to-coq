@@ -4,4 +4,4 @@
 -Q ../../containers/lib   ""
 -Q ../../containers/theories  ""
 -Q ../../transformers/lib  ""
-Network/Socket.v Network/Socket/Address.v Network/Socket/Handle.v Network/Socket/Internal.v Network/Socket/SockAddr.v Network/Socket/ByteString.v Network/Socket/If.v Network/Socket/Name.v Network/Socket/Syscall.v Network/Socket/Fcntl.v Network/Socket/Imports.v Network/Socket/Shutdown.v NetworkTypes.v Divergence.v IO.v Network.v
+Network/Socket.v Network/Socket/Address.v Network/Socket/ByteString.v Network/Socket/Handle.v Network/Socket/Internal.v Network/Socket/SockAddr.v Network/Socket/If.v Network/Socket/Name.v Network/Socket/Syscall.v Network/Socket/Fcntl.v Network/Socket/Imports.v Network/Socket/Shutdown.v Network/Socket/ByteString/Internal.v Network/Socket/ByteString/Lazy.v Network/Socket/ByteString/LAZYMOD.v Network/Socket/ByteString/=.v Network/Socket/ByteString/Posix.v Network/Socket/ByteString/Windows.v IO.v

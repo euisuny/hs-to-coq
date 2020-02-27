@@ -1,1 +1,0 @@
-../../manual/state/SocketConstants.v

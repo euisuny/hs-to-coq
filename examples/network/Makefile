@@ -3,23 +3,30 @@ include ../../common.mk
 OUT=lib
 
 MAINMODS = Main
-MODULES = Network/Socket \
-					Network/Socket/Address \
-					Network/Socket/Handle \
-					Network/Socket/Internal \
-					Network/Socket/SockAddr \
-					Network/Socket/ByteString \
-					Network/Socket/If \
-					Network/Socket/Name \
-					Network/Socket/Syscall \
-					Network/Socket/Fcntl \
-					Network/Socket/Imports \
-					Network/Socket/Shutdown
 
-HANDMOD = NetworkTypes \
-					Divergence \
-					IO \
-					Network
+NETWORKMOD = Socket
+SOCKETMOD = Address \
+					ByteString \
+					Handle \
+					Internal \
+					SockAddr \
+					If \
+					Name \
+					Syscall \
+					Fcntl \
+					Imports \
+					Shutdown
+BYTESTRMOD = Internal \
+						 Lazy \
+LAZYMOD = Posix \
+					Windows
+
+MODULES = $(addprefix Network/, $(NETWORKMOD)) \
+					$(addprefix Network/Socket/, $(SOCKETMOD)) \
+					$(addprefix Network/Socket/ByteString/, $(BYTESTRMOD))
+
+HANDMOD = IO
+
 PROOFS = Proofs
 
 VFILES_GEN       = $(addsuffix .v,$(MODULES))
@@ -73,11 +80,8 @@ coq: $(OUT)/Makefile $(OUTFILES)
 
 HS_TO_COQ_OPTS=\
 		 -N \
-     -i Network \
-		 -I Network \
-		 -i Network/Socket \
-		 -I Network/Socket \
-		 -I include \
+		 -i gen-files \
+		 -I gen-files \
      -e ../../base/edits \
      -e ../containers/edits \
      -e ../transformers/edits \
