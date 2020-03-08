@@ -1,0 +1,17 @@
+constructors:
+  Network.Socket.Shutdown.ShutdownCmd: ! '[Qualified "Network.Socket.Shutdown" "ShutdownReceive",Qualified
+    "Network.Socket.Shutdown" "ShutdownSend",Qualified "Network.Socket.Shutdown" "ShutdownBoth"]'
+  Network.Socket.Shutdown.Wait: ! '[Qualified "Network.Socket.Shutdown" "MoreData",Qualified
+    "Network.Socket.Shutdown" "TimeoutTripped"]'
+constructorFields:
+  Network.Socket.Shutdown.ShutdownBoth: NonRecordFields 0
+  Network.Socket.Shutdown.TimeoutTripped: NonRecordFields 0
+  Network.Socket.Shutdown.MoreData: NonRecordFields 0
+  Network.Socket.Shutdown.ShutdownReceive: NonRecordFields 0
+  Network.Socket.Shutdown.ShutdownSend: NonRecordFields 0
+constructorTypes:
+  Network.Socket.Shutdown.ShutdownBoth: Qualified "Network.Socket.Shutdown" "ShutdownCmd"
+  Network.Socket.Shutdown.TimeoutTripped: Qualified "Network.Socket.Shutdown" "Wait"
+  Network.Socket.Shutdown.MoreData: Qualified "Network.Socket.Shutdown" "Wait"
+  Network.Socket.Shutdown.ShutdownReceive: Qualified "Network.Socket.Shutdown" "ShutdownCmd"
+  Network.Socket.Shutdown.ShutdownSend: Qualified "Network.Socket.Shutdown" "ShutdownCmd"

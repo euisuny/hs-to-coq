@@ -1,4 +1,4 @@
-{-# LINE 1 "Types.hsc" #-}
+{-# LINE 1 "Network/Socket/Types.hsc" #-}
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE MagicHash, UnboxedTuples #-}
 {-# LANGUAGE DeriveDataTypeable #-}
@@ -82,10 +82,10 @@ import GHC.STRef (STRef (..))
 import GHC.IO (IO (..))
 
 
-{-# LINE 84 "Types.hsc" #-}
+{-# LINE 84 "Network/Socket/Types.hsc" #-}
 import Foreign.Marshal.Array
 
-{-# LINE 86 "Types.hsc" #-}
+{-# LINE 86 "Network/Socket/Types.hsc" #-}
 
 import Network.Socket.Imports
 
@@ -178,7 +178,7 @@ withFdSocket (Socket ref _) f = do
 socketToFd :: Socket -> IO CInt
 socketToFd s = do
 
-{-# LINE 187 "Types.hsc" #-}
+{-# LINE 187 "Network/Socket/Types.hsc" #-}
     fd <- unsafeFdSocket s
     -- FIXME: throw error no if -1
     fd2 <- c_dup fd
@@ -188,7 +188,7 @@ socketToFd s = do
 foreign import ccall unsafe "dup"
    c_dup :: CInt -> IO CInt
 
-{-# LINE 196 "Types.hsc" #-}
+{-# LINE 196 "Network/Socket/Types.hsc" #-}
 
 -- | Creating a socket from a file descriptor.
 mkSocket :: CInt -> IO Socket
@@ -200,10 +200,10 @@ mkSocket fd = do
 
 invalidSocket :: CInt
 
-{-# LINE 209 "Types.hsc" #-}
+{-# LINE 209 "Network/Socket/Types.hsc" #-}
 invalidSocket = -1
 
-{-# LINE 211 "Types.hsc" #-}
+{-# LINE 211 "Network/Socket/Types.hsc" #-}
 
 invalidateSocket ::
       Socket
@@ -249,11 +249,11 @@ close' s = invalidateSocket s (\_ -> return ()) $ \oldfd -> do
         when (ret == -1) $ throwErrno "Network.Socket.close'"
 
 
-{-# LINE 259 "Types.hsc" #-}
+{-# LINE 259 "Network/Socket/Types.hsc" #-}
 foreign import ccall unsafe "close"
   c_close :: CInt -> IO CInt
 
-{-# LINE 262 "Types.hsc" #-}
+{-# LINE 262 "Network/Socket/Types.hsc" #-}
 
 -----------------------------------------------------------------------------
 
@@ -309,35 +309,35 @@ packSocketType' stype = case Just stype of
     -- detection: see comments for packSocketOption
     Just NoSocketType -> Just 0
 
-{-# LINE 317 "Types.hsc" #-}
+{-# LINE 317 "Network/Socket/Types.hsc" #-}
     Just Stream -> Just 1
-{-# LINE 318 "Types.hsc" #-}
+{-# LINE 318 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 319 "Types.hsc" #-}
+{-# LINE 319 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 320 "Types.hsc" #-}
+{-# LINE 320 "Network/Socket/Types.hsc" #-}
     Just Datagram -> Just 2
-{-# LINE 321 "Types.hsc" #-}
+{-# LINE 321 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 322 "Types.hsc" #-}
+{-# LINE 322 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 323 "Types.hsc" #-}
+{-# LINE 323 "Network/Socket/Types.hsc" #-}
     Just Raw -> Just 3
-{-# LINE 324 "Types.hsc" #-}
+{-# LINE 324 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 325 "Types.hsc" #-}
+{-# LINE 325 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 326 "Types.hsc" #-}
+{-# LINE 326 "Network/Socket/Types.hsc" #-}
     Just RDM -> Just 4
-{-# LINE 327 "Types.hsc" #-}
+{-# LINE 327 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 328 "Types.hsc" #-}
+{-# LINE 328 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 329 "Types.hsc" #-}
+{-# LINE 329 "Network/Socket/Types.hsc" #-}
     Just SeqPacket -> Just 5
-{-# LINE 330 "Types.hsc" #-}
+{-# LINE 330 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 331 "Types.hsc" #-}
+{-# LINE 331 "Network/Socket/Types.hsc" #-}
     _ -> Nothing
 
 packSocketType :: SocketType -> CInt
@@ -359,35 +359,35 @@ unpackSocketType:: CInt -> Maybe SocketType
 unpackSocketType t = case t of
         0 -> Just NoSocketType
 
-{-# LINE 352 "Types.hsc" #-}
+{-# LINE 352 "Network/Socket/Types.hsc" #-}
         (1) -> Just Stream
-{-# LINE 353 "Types.hsc" #-}
+{-# LINE 353 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 354 "Types.hsc" #-}
+{-# LINE 354 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 355 "Types.hsc" #-}
+{-# LINE 355 "Network/Socket/Types.hsc" #-}
         (2) -> Just Datagram
-{-# LINE 356 "Types.hsc" #-}
+{-# LINE 356 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 357 "Types.hsc" #-}
+{-# LINE 357 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 358 "Types.hsc" #-}
+{-# LINE 358 "Network/Socket/Types.hsc" #-}
         (3) -> Just Raw
-{-# LINE 359 "Types.hsc" #-}
+{-# LINE 359 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 360 "Types.hsc" #-}
+{-# LINE 360 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 361 "Types.hsc" #-}
+{-# LINE 361 "Network/Socket/Types.hsc" #-}
         (4) -> Just RDM
-{-# LINE 362 "Types.hsc" #-}
+{-# LINE 362 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 363 "Types.hsc" #-}
+{-# LINE 363 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 364 "Types.hsc" #-}
+{-# LINE 364 "Network/Socket/Types.hsc" #-}
         (5) -> Just SeqPacket
-{-# LINE 365 "Types.hsc" #-}
+{-# LINE 365 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 366 "Types.hsc" #-}
+{-# LINE 366 "Network/Socket/Types.hsc" #-}
         _ -> Nothing
 
 -- | Try unpackSocketType on the CInt, if it fails throw an error with
@@ -492,245 +492,245 @@ packFamily' f = case Just f of
     -- the Just above is to disable GHC's overlapping pattern
     -- detection: see comments for packSocketOption
     Just AF_UNSPEC -> Just 0
-{-# LINE 470 "Types.hsc" #-}
+{-# LINE 470 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 471 "Types.hsc" #-}
+{-# LINE 471 "Network/Socket/Types.hsc" #-}
     Just AF_UNIX -> Just 1
-{-# LINE 472 "Types.hsc" #-}
+{-# LINE 472 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 473 "Types.hsc" #-}
+{-# LINE 473 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 474 "Types.hsc" #-}
+{-# LINE 474 "Network/Socket/Types.hsc" #-}
     Just AF_INET -> Just 2
-{-# LINE 475 "Types.hsc" #-}
+{-# LINE 475 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 476 "Types.hsc" #-}
+{-# LINE 476 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 477 "Types.hsc" #-}
+{-# LINE 477 "Network/Socket/Types.hsc" #-}
     Just AF_INET6 -> Just 30
-{-# LINE 478 "Types.hsc" #-}
+{-# LINE 478 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 479 "Types.hsc" #-}
+{-# LINE 479 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 480 "Types.hsc" #-}
+{-# LINE 480 "Network/Socket/Types.hsc" #-}
     Just AF_IMPLINK -> Just 3
-{-# LINE 481 "Types.hsc" #-}
+{-# LINE 481 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 482 "Types.hsc" #-}
+{-# LINE 482 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 483 "Types.hsc" #-}
+{-# LINE 483 "Network/Socket/Types.hsc" #-}
     Just AF_PUP -> Just 4
-{-# LINE 484 "Types.hsc" #-}
+{-# LINE 484 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 485 "Types.hsc" #-}
+{-# LINE 485 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 486 "Types.hsc" #-}
+{-# LINE 486 "Network/Socket/Types.hsc" #-}
     Just AF_CHAOS -> Just 5
-{-# LINE 487 "Types.hsc" #-}
+{-# LINE 487 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 488 "Types.hsc" #-}
+{-# LINE 488 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 489 "Types.hsc" #-}
+{-# LINE 489 "Network/Socket/Types.hsc" #-}
     Just AF_NS -> Just 6
-{-# LINE 490 "Types.hsc" #-}
+{-# LINE 490 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 491 "Types.hsc" #-}
+{-# LINE 491 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 494 "Types.hsc" #-}
+{-# LINE 494 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 495 "Types.hsc" #-}
+{-# LINE 495 "Network/Socket/Types.hsc" #-}
     Just AF_ECMA -> Just 8
-{-# LINE 496 "Types.hsc" #-}
+{-# LINE 496 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 497 "Types.hsc" #-}
+{-# LINE 497 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 498 "Types.hsc" #-}
+{-# LINE 498 "Network/Socket/Types.hsc" #-}
     Just AF_DATAKIT -> Just 9
-{-# LINE 499 "Types.hsc" #-}
+{-# LINE 499 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 500 "Types.hsc" #-}
+{-# LINE 500 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 501 "Types.hsc" #-}
+{-# LINE 501 "Network/Socket/Types.hsc" #-}
     Just AF_CCITT -> Just 10
-{-# LINE 502 "Types.hsc" #-}
+{-# LINE 502 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 503 "Types.hsc" #-}
+{-# LINE 503 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 504 "Types.hsc" #-}
+{-# LINE 504 "Network/Socket/Types.hsc" #-}
     Just AF_SNA -> Just 11
-{-# LINE 505 "Types.hsc" #-}
+{-# LINE 505 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 506 "Types.hsc" #-}
+{-# LINE 506 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 507 "Types.hsc" #-}
+{-# LINE 507 "Network/Socket/Types.hsc" #-}
     Just AF_DECnet -> Just 12
-{-# LINE 508 "Types.hsc" #-}
+{-# LINE 508 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 509 "Types.hsc" #-}
+{-# LINE 509 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 510 "Types.hsc" #-}
+{-# LINE 510 "Network/Socket/Types.hsc" #-}
     Just AF_DLI -> Just 13
-{-# LINE 511 "Types.hsc" #-}
+{-# LINE 511 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 512 "Types.hsc" #-}
+{-# LINE 512 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 513 "Types.hsc" #-}
+{-# LINE 513 "Network/Socket/Types.hsc" #-}
     Just AF_LAT -> Just 14
-{-# LINE 514 "Types.hsc" #-}
+{-# LINE 514 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 515 "Types.hsc" #-}
+{-# LINE 515 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 516 "Types.hsc" #-}
+{-# LINE 516 "Network/Socket/Types.hsc" #-}
     Just AF_HYLINK -> Just 15
-{-# LINE 517 "Types.hsc" #-}
+{-# LINE 517 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 518 "Types.hsc" #-}
+{-# LINE 518 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 519 "Types.hsc" #-}
+{-# LINE 519 "Network/Socket/Types.hsc" #-}
     Just AF_APPLETALK -> Just 16
-{-# LINE 520 "Types.hsc" #-}
+{-# LINE 520 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 521 "Types.hsc" #-}
+{-# LINE 521 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 522 "Types.hsc" #-}
+{-# LINE 522 "Network/Socket/Types.hsc" #-}
     Just AF_ROUTE -> Just 17
-{-# LINE 523 "Types.hsc" #-}
+{-# LINE 523 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 524 "Types.hsc" #-}
+{-# LINE 524 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 525 "Types.hsc" #-}
+{-# LINE 525 "Network/Socket/Types.hsc" #-}
     Just AF_NETBIOS -> Just 33
-{-# LINE 526 "Types.hsc" #-}
+{-# LINE 526 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 527 "Types.hsc" #-}
+{-# LINE 527 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 530 "Types.hsc" #-}
+{-# LINE 530 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 533 "Types.hsc" #-}
+{-# LINE 533 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 534 "Types.hsc" #-}
+{-# LINE 534 "Network/Socket/Types.hsc" #-}
     Just AF_ISO -> Just 7
-{-# LINE 535 "Types.hsc" #-}
+{-# LINE 535 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 536 "Types.hsc" #-}
+{-# LINE 536 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 537 "Types.hsc" #-}
+{-# LINE 537 "Network/Socket/Types.hsc" #-}
     Just AF_OSI -> Just 7
-{-# LINE 538 "Types.hsc" #-}
+{-# LINE 538 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 539 "Types.hsc" #-}
+{-# LINE 539 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 542 "Types.hsc" #-}
+{-# LINE 542 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 545 "Types.hsc" #-}
+{-# LINE 545 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 548 "Types.hsc" #-}
+{-# LINE 548 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 551 "Types.hsc" #-}
+{-# LINE 551 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 554 "Types.hsc" #-}
+{-# LINE 554 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 555 "Types.hsc" #-}
+{-# LINE 555 "Network/Socket/Types.hsc" #-}
     Just AF_IPX -> Just 23
-{-# LINE 556 "Types.hsc" #-}
+{-# LINE 556 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 557 "Types.hsc" #-}
+{-# LINE 557 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 560 "Types.hsc" #-}
+{-# LINE 560 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 563 "Types.hsc" #-}
+{-# LINE 563 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 566 "Types.hsc" #-}
+{-# LINE 566 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 569 "Types.hsc" #-}
+{-# LINE 569 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 572 "Types.hsc" #-}
+{-# LINE 572 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 575 "Types.hsc" #-}
+{-# LINE 575 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 578 "Types.hsc" #-}
+{-# LINE 578 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 579 "Types.hsc" #-}
+{-# LINE 579 "Network/Socket/Types.hsc" #-}
     Just AF_COIP -> Just 20
-{-# LINE 580 "Types.hsc" #-}
+{-# LINE 580 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 581 "Types.hsc" #-}
+{-# LINE 581 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 582 "Types.hsc" #-}
+{-# LINE 582 "Network/Socket/Types.hsc" #-}
     Just AF_CNT -> Just 21
-{-# LINE 583 "Types.hsc" #-}
+{-# LINE 583 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 584 "Types.hsc" #-}
+{-# LINE 584 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 587 "Types.hsc" #-}
+{-# LINE 587 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 590 "Types.hsc" #-}
+{-# LINE 590 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 591 "Types.hsc" #-}
+{-# LINE 591 "Network/Socket/Types.hsc" #-}
     Just AF_SIP -> Just 24
-{-# LINE 592 "Types.hsc" #-}
+{-# LINE 592 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 593 "Types.hsc" #-}
+{-# LINE 593 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 594 "Types.hsc" #-}
+{-# LINE 594 "Network/Socket/Types.hsc" #-}
     Just AF_ISDN -> Just 28
-{-# LINE 595 "Types.hsc" #-}
+{-# LINE 595 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 596 "Types.hsc" #-}
+{-# LINE 596 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 599 "Types.hsc" #-}
+{-# LINE 599 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 600 "Types.hsc" #-}
+{-# LINE 600 "Network/Socket/Types.hsc" #-}
     Just AF_NATM -> Just 31
-{-# LINE 601 "Types.hsc" #-}
+{-# LINE 601 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 602 "Types.hsc" #-}
+{-# LINE 602 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 605 "Types.hsc" #-}
+{-# LINE 605 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 608 "Types.hsc" #-}
+{-# LINE 608 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 611 "Types.hsc" #-}
+{-# LINE 611 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 612 "Types.hsc" #-}
+{-# LINE 612 "Network/Socket/Types.hsc" #-}
     Just AF_LINK -> Just 18
-{-# LINE 613 "Types.hsc" #-}
+{-# LINE 613 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 614 "Types.hsc" #-}
+{-# LINE 614 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 617 "Types.hsc" #-}
+{-# LINE 617 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 620 "Types.hsc" #-}
+{-# LINE 620 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 623 "Types.hsc" #-}
+{-# LINE 623 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 626 "Types.hsc" #-}
+{-# LINE 626 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 629 "Types.hsc" #-}
+{-# LINE 629 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 632 "Types.hsc" #-}
+{-# LINE 632 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 635 "Types.hsc" #-}
+{-# LINE 635 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 638 "Types.hsc" #-}
+{-# LINE 638 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 641 "Types.hsc" #-}
+{-# LINE 641 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 644 "Types.hsc" #-}
+{-# LINE 644 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 647 "Types.hsc" #-}
+{-# LINE 647 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 650 "Types.hsc" #-}
+{-# LINE 650 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 653 "Types.hsc" #-}
+{-# LINE 653 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 656 "Types.hsc" #-}
+{-# LINE 656 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 659 "Types.hsc" #-}
+{-# LINE 659 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 662 "Types.hsc" #-}
+{-# LINE 662 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 665 "Types.hsc" #-}
+{-# LINE 665 "Network/Socket/Types.hsc" #-}
     _ -> Nothing
 
 --------- ----------
@@ -739,245 +739,245 @@ packFamily' f = case Just f of
 unpackFamily :: CInt -> Family
 unpackFamily f = case f of
         (0) -> AF_UNSPEC
-{-# LINE 673 "Types.hsc" #-}
+{-# LINE 673 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 674 "Types.hsc" #-}
+{-# LINE 674 "Network/Socket/Types.hsc" #-}
         (1) -> AF_UNIX
-{-# LINE 675 "Types.hsc" #-}
+{-# LINE 675 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 676 "Types.hsc" #-}
+{-# LINE 676 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 677 "Types.hsc" #-}
+{-# LINE 677 "Network/Socket/Types.hsc" #-}
         (2) -> AF_INET
-{-# LINE 678 "Types.hsc" #-}
+{-# LINE 678 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 679 "Types.hsc" #-}
+{-# LINE 679 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 680 "Types.hsc" #-}
+{-# LINE 680 "Network/Socket/Types.hsc" #-}
         (30) -> AF_INET6
-{-# LINE 681 "Types.hsc" #-}
+{-# LINE 681 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 682 "Types.hsc" #-}
+{-# LINE 682 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 683 "Types.hsc" #-}
+{-# LINE 683 "Network/Socket/Types.hsc" #-}
         (3) -> AF_IMPLINK
-{-# LINE 684 "Types.hsc" #-}
+{-# LINE 684 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 685 "Types.hsc" #-}
+{-# LINE 685 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 686 "Types.hsc" #-}
+{-# LINE 686 "Network/Socket/Types.hsc" #-}
         (4) -> AF_PUP
-{-# LINE 687 "Types.hsc" #-}
+{-# LINE 687 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 688 "Types.hsc" #-}
+{-# LINE 688 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 689 "Types.hsc" #-}
+{-# LINE 689 "Network/Socket/Types.hsc" #-}
         (5) -> AF_CHAOS
-{-# LINE 690 "Types.hsc" #-}
+{-# LINE 690 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 691 "Types.hsc" #-}
+{-# LINE 691 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 692 "Types.hsc" #-}
+{-# LINE 692 "Network/Socket/Types.hsc" #-}
         (6) -> AF_NS
-{-# LINE 693 "Types.hsc" #-}
+{-# LINE 693 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 694 "Types.hsc" #-}
+{-# LINE 694 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 697 "Types.hsc" #-}
+{-# LINE 697 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 698 "Types.hsc" #-}
+{-# LINE 698 "Network/Socket/Types.hsc" #-}
         (8) -> AF_ECMA
-{-# LINE 699 "Types.hsc" #-}
+{-# LINE 699 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 700 "Types.hsc" #-}
+{-# LINE 700 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 701 "Types.hsc" #-}
+{-# LINE 701 "Network/Socket/Types.hsc" #-}
         (9) -> AF_DATAKIT
-{-# LINE 702 "Types.hsc" #-}
+{-# LINE 702 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 703 "Types.hsc" #-}
+{-# LINE 703 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 704 "Types.hsc" #-}
+{-# LINE 704 "Network/Socket/Types.hsc" #-}
         (10) -> AF_CCITT
-{-# LINE 705 "Types.hsc" #-}
+{-# LINE 705 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 706 "Types.hsc" #-}
+{-# LINE 706 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 707 "Types.hsc" #-}
+{-# LINE 707 "Network/Socket/Types.hsc" #-}
         (11) -> AF_SNA
-{-# LINE 708 "Types.hsc" #-}
+{-# LINE 708 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 709 "Types.hsc" #-}
+{-# LINE 709 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 710 "Types.hsc" #-}
+{-# LINE 710 "Network/Socket/Types.hsc" #-}
         (12) -> AF_DECnet
-{-# LINE 711 "Types.hsc" #-}
+{-# LINE 711 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 712 "Types.hsc" #-}
+{-# LINE 712 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 713 "Types.hsc" #-}
+{-# LINE 713 "Network/Socket/Types.hsc" #-}
         (13) -> AF_DLI
-{-# LINE 714 "Types.hsc" #-}
+{-# LINE 714 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 715 "Types.hsc" #-}
+{-# LINE 715 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 716 "Types.hsc" #-}
+{-# LINE 716 "Network/Socket/Types.hsc" #-}
         (14) -> AF_LAT
-{-# LINE 717 "Types.hsc" #-}
+{-# LINE 717 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 718 "Types.hsc" #-}
+{-# LINE 718 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 719 "Types.hsc" #-}
+{-# LINE 719 "Network/Socket/Types.hsc" #-}
         (15) -> AF_HYLINK
-{-# LINE 720 "Types.hsc" #-}
+{-# LINE 720 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 721 "Types.hsc" #-}
+{-# LINE 721 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 722 "Types.hsc" #-}
+{-# LINE 722 "Network/Socket/Types.hsc" #-}
         (16) -> AF_APPLETALK
-{-# LINE 723 "Types.hsc" #-}
+{-# LINE 723 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 724 "Types.hsc" #-}
+{-# LINE 724 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 725 "Types.hsc" #-}
+{-# LINE 725 "Network/Socket/Types.hsc" #-}
         (17) -> AF_ROUTE
-{-# LINE 726 "Types.hsc" #-}
+{-# LINE 726 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 727 "Types.hsc" #-}
+{-# LINE 727 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 728 "Types.hsc" #-}
+{-# LINE 728 "Network/Socket/Types.hsc" #-}
         (33) -> AF_NETBIOS
-{-# LINE 729 "Types.hsc" #-}
+{-# LINE 729 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 730 "Types.hsc" #-}
+{-# LINE 730 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 733 "Types.hsc" #-}
+{-# LINE 733 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 736 "Types.hsc" #-}
+{-# LINE 736 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 737 "Types.hsc" #-}
+{-# LINE 737 "Network/Socket/Types.hsc" #-}
         (7) -> AF_ISO
-{-# LINE 738 "Types.hsc" #-}
+{-# LINE 738 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 739 "Types.hsc" #-}
+{-# LINE 739 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 740 "Types.hsc" #-}
+{-# LINE 740 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 743 "Types.hsc" #-}
+{-# LINE 743 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 744 "Types.hsc" #-}
+{-# LINE 744 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 747 "Types.hsc" #-}
+{-# LINE 747 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 750 "Types.hsc" #-}
+{-# LINE 750 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 753 "Types.hsc" #-}
+{-# LINE 753 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 756 "Types.hsc" #-}
+{-# LINE 756 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 759 "Types.hsc" #-}
+{-# LINE 759 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 760 "Types.hsc" #-}
+{-# LINE 760 "Network/Socket/Types.hsc" #-}
         (23) -> AF_IPX
-{-# LINE 761 "Types.hsc" #-}
+{-# LINE 761 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 762 "Types.hsc" #-}
+{-# LINE 762 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 765 "Types.hsc" #-}
+{-# LINE 765 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 768 "Types.hsc" #-}
+{-# LINE 768 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 771 "Types.hsc" #-}
+{-# LINE 771 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 774 "Types.hsc" #-}
+{-# LINE 774 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 777 "Types.hsc" #-}
+{-# LINE 777 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 780 "Types.hsc" #-}
+{-# LINE 780 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 783 "Types.hsc" #-}
+{-# LINE 783 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 784 "Types.hsc" #-}
+{-# LINE 784 "Network/Socket/Types.hsc" #-}
         (20) -> AF_COIP
-{-# LINE 785 "Types.hsc" #-}
+{-# LINE 785 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 786 "Types.hsc" #-}
+{-# LINE 786 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 787 "Types.hsc" #-}
+{-# LINE 787 "Network/Socket/Types.hsc" #-}
         (21) -> AF_CNT
-{-# LINE 788 "Types.hsc" #-}
+{-# LINE 788 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 789 "Types.hsc" #-}
+{-# LINE 789 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 792 "Types.hsc" #-}
+{-# LINE 792 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 795 "Types.hsc" #-}
+{-# LINE 795 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 796 "Types.hsc" #-}
+{-# LINE 796 "Network/Socket/Types.hsc" #-}
         (24) -> AF_SIP
-{-# LINE 797 "Types.hsc" #-}
+{-# LINE 797 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 798 "Types.hsc" #-}
+{-# LINE 798 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 799 "Types.hsc" #-}
+{-# LINE 799 "Network/Socket/Types.hsc" #-}
         (28) -> AF_ISDN
-{-# LINE 800 "Types.hsc" #-}
+{-# LINE 800 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 801 "Types.hsc" #-}
+{-# LINE 801 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 804 "Types.hsc" #-}
+{-# LINE 804 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 805 "Types.hsc" #-}
+{-# LINE 805 "Network/Socket/Types.hsc" #-}
         (31) -> AF_NATM
-{-# LINE 806 "Types.hsc" #-}
+{-# LINE 806 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 807 "Types.hsc" #-}
+{-# LINE 807 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 810 "Types.hsc" #-}
+{-# LINE 810 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 813 "Types.hsc" #-}
+{-# LINE 813 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 816 "Types.hsc" #-}
+{-# LINE 816 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 817 "Types.hsc" #-}
+{-# LINE 817 "Network/Socket/Types.hsc" #-}
         (18) -> AF_LINK
-{-# LINE 818 "Types.hsc" #-}
+{-# LINE 818 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 819 "Types.hsc" #-}
+{-# LINE 819 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 822 "Types.hsc" #-}
+{-# LINE 822 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 825 "Types.hsc" #-}
+{-# LINE 825 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 828 "Types.hsc" #-}
+{-# LINE 828 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 831 "Types.hsc" #-}
+{-# LINE 831 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 834 "Types.hsc" #-}
+{-# LINE 834 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 837 "Types.hsc" #-}
+{-# LINE 837 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 840 "Types.hsc" #-}
+{-# LINE 840 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 843 "Types.hsc" #-}
+{-# LINE 843 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 846 "Types.hsc" #-}
+{-# LINE 846 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 849 "Types.hsc" #-}
+{-# LINE 849 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 852 "Types.hsc" #-}
+{-# LINE 852 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 855 "Types.hsc" #-}
+{-# LINE 855 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 858 "Types.hsc" #-}
+{-# LINE 858 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 861 "Types.hsc" #-}
+{-# LINE 861 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 864 "Types.hsc" #-}
+{-# LINE 864 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 867 "Types.hsc" #-}
+{-# LINE 867 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 870 "Types.hsc" #-}
+{-# LINE 870 "Network/Socket/Types.hsc" #-}
         unknown -> error $
           "Network.Socket.Types.unpackFamily: unknown address family: " ++
           show unknown
@@ -1110,10 +1110,10 @@ isSupportedSockAddr addr = case addr of
   SockAddrInet{}  -> True
   SockAddrInet6{} -> True
 
-{-# LINE 1002 "Types.hsc" #-}
+{-# LINE 1002 "Network/Socket/Types.hsc" #-}
   SockAddrUnix{}  -> True
 
-{-# LINE 1006 "Types.hsc" #-}
+{-# LINE 1006 "Network/Socket/Types.hsc" #-}
 
 instance SocketAddress SockAddr where
     sizeOfSocketAddress = sizeOfSockAddr
@@ -1121,30 +1121,30 @@ instance SocketAddress SockAddr where
     pokeSocketAddress   = pokeSockAddr
 
 
-{-# LINE 1017 "Types.hsc" #-}
+{-# LINE 1015 "Network/Socket/Types.hsc" #-}
 type CSaFamily = (Word8)
-{-# LINE 1018 "Types.hsc" #-}
+{-# LINE 1016 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 1019 "Types.hsc" #-}
+{-# LINE 1019 "Network/Socket/Types.hsc" #-}
 
 -- | Computes the storage requirements (in bytes) of the given
 -- 'SockAddr'.  This function differs from 'Foreign.Storable.sizeOf'
 -- in that the value of the argument /is/ used.
 sizeOfSockAddr :: SockAddr -> Int
 
-{-# LINE 1025 "Types.hsc" #-}
+{-# LINE 1025 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 1042 "Types.hsc" #-}
+{-# LINE 1042 "Network/Socket/Types.hsc" #-}
 sizeOfSockAddr SockAddrUnix{}  = 106
-{-# LINE 1043 "Types.hsc" #-}
+{-# LINE 1043 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 1044 "Types.hsc" #-}
+{-# LINE 1044 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 1047 "Types.hsc" #-}
+{-# LINE 1047 "Network/Socket/Types.hsc" #-}
 sizeOfSockAddr SockAddrInet{}  = 16
-{-# LINE 1048 "Types.hsc" #-}
+{-# LINE 1048 "Network/Socket/Types.hsc" #-}
 sizeOfSockAddr SockAddrInet6{} = 28
-{-# LINE 1049 "Types.hsc" #-}
+{-# LINE 1049 "Network/Socket/Types.hsc" #-}
 
 -- | Use a 'SockAddr' with a function requiring a pointer to a
 -- 'SockAddr' and the length of that 'SockAddr'.
@@ -1158,12 +1158,12 @@ withSockAddr addr f = do
 -- space.  This constant holds the maximum allowable path length.
 --
 
-{-# LINE 1062 "Types.hsc" #-}
+{-# LINE 1062 "Network/Socket/Types.hsc" #-}
 unixPathMax :: Int
 unixPathMax = 104
-{-# LINE 1064 "Types.hsc" #-}
+{-# LINE 1064 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 1065 "Types.hsc" #-}
+{-# LINE 1065 "Network/Socket/Types.hsc" #-}
 
 -- We can't write an instance of 'Storable' for 'SockAddr' because
 -- @sockaddr@ is a sum type of variable size but
@@ -1175,91 +1175,91 @@ unixPathMax = 104
 -- | Write the given 'SockAddr' to the given memory location.
 pokeSockAddr :: Ptr a -> SockAddr -> IO ()
 
-{-# LINE 1076 "Types.hsc" #-}
+{-# LINE 1076 "Network/Socket/Types.hsc" #-}
 pokeSockAddr p sa@(SockAddrUnix path) = do
     when (length path > unixPathMax) $ error "pokeSockAddr: path is too long"
     zeroMemory p $ fromIntegral $ sizeOfSockAddr sa
 
-{-# LINE 1080 "Types.hsc" #-}
+{-# LINE 1080 "Network/Socket/Types.hsc" #-}
     ((\hsc_ptr -> pokeByteOff hsc_ptr 0)) p ((106) :: Word8)
-{-# LINE 1081 "Types.hsc" #-}
+{-# LINE 1081 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 1082 "Types.hsc" #-}
+{-# LINE 1082 "Network/Socket/Types.hsc" #-}
     ((\hsc_ptr -> pokeByteOff hsc_ptr 1)) p ((1) :: CSaFamily)
-{-# LINE 1083 "Types.hsc" #-}
+{-# LINE 1083 "Network/Socket/Types.hsc" #-}
     let pathC = map castCharToCChar path
     -- the buffer is already filled with nulls.
     pokeArray (((\hsc_ptr -> hsc_ptr `plusPtr` 2)) p) pathC
-{-# LINE 1086 "Types.hsc" #-}
+{-# LINE 1086 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 1089 "Types.hsc" #-}
+{-# LINE 1089 "Network/Socket/Types.hsc" #-}
 pokeSockAddr p (SockAddrInet port addr) = do
     zeroMemory p (16)
-{-# LINE 1091 "Types.hsc" #-}
+{-# LINE 1091 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 1092 "Types.hsc" #-}
+{-# LINE 1092 "Network/Socket/Types.hsc" #-}
     ((\hsc_ptr -> pokeByteOff hsc_ptr 0)) p ((16) :: Word8)
-{-# LINE 1093 "Types.hsc" #-}
+{-# LINE 1093 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 1094 "Types.hsc" #-}
+{-# LINE 1094 "Network/Socket/Types.hsc" #-}
     ((\hsc_ptr -> pokeByteOff hsc_ptr 1)) p ((2) :: CSaFamily)
-{-# LINE 1095 "Types.hsc" #-}
+{-# LINE 1095 "Network/Socket/Types.hsc" #-}
     ((\hsc_ptr -> pokeByteOff hsc_ptr 2)) p port
-{-# LINE 1096 "Types.hsc" #-}
+{-# LINE 1096 "Network/Socket/Types.hsc" #-}
     ((\hsc_ptr -> pokeByteOff hsc_ptr 4)) p addr
-{-# LINE 1097 "Types.hsc" #-}
+{-# LINE 1097 "Network/Socket/Types.hsc" #-}
 pokeSockAddr p (SockAddrInet6 port flow addr scope) = do
     zeroMemory p (28)
-{-# LINE 1099 "Types.hsc" #-}
+{-# LINE 1099 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 1100 "Types.hsc" #-}
+{-# LINE 1100 "Network/Socket/Types.hsc" #-}
     ((\hsc_ptr -> pokeByteOff hsc_ptr 0)) p ((28) :: Word8)
-{-# LINE 1101 "Types.hsc" #-}
+{-# LINE 1101 "Network/Socket/Types.hsc" #-}
 
-{-# LINE 1102 "Types.hsc" #-}
+{-# LINE 1102 "Network/Socket/Types.hsc" #-}
     ((\hsc_ptr -> pokeByteOff hsc_ptr 1)) p ((30) :: CSaFamily)
-{-# LINE 1103 "Types.hsc" #-}
+{-# LINE 1103 "Network/Socket/Types.hsc" #-}
     ((\hsc_ptr -> pokeByteOff hsc_ptr 2)) p port
-{-# LINE 1104 "Types.hsc" #-}
+{-# LINE 1104 "Network/Socket/Types.hsc" #-}
     ((\hsc_ptr -> pokeByteOff hsc_ptr 4)) p flow
-{-# LINE 1105 "Types.hsc" #-}
+{-# LINE 1105 "Network/Socket/Types.hsc" #-}
     ((\hsc_ptr -> pokeByteOff hsc_ptr 8)) p (In6Addr addr)
-{-# LINE 1106 "Types.hsc" #-}
+{-# LINE 1106 "Network/Socket/Types.hsc" #-}
     ((\hsc_ptr -> pokeByteOff hsc_ptr 24)) p scope
-{-# LINE 1107 "Types.hsc" #-}
+{-# LINE 1107 "Network/Socket/Types.hsc" #-}
 
 -- | Read a 'SockAddr' from the given memory location.
 peekSockAddr :: Ptr SockAddr -> IO SockAddr
 peekSockAddr p = do
   family <- ((\hsc_ptr -> peekByteOff hsc_ptr 1)) p
-{-# LINE 1112 "Types.hsc" #-}
+{-# LINE 1112 "Network/Socket/Types.hsc" #-}
   case family :: CSaFamily of
 
-{-# LINE 1114 "Types.hsc" #-}
+{-# LINE 1114 "Network/Socket/Types.hsc" #-}
     (1) -> do
-{-# LINE 1115 "Types.hsc" #-}
+{-# LINE 1115 "Network/Socket/Types.hsc" #-}
         str <- peekCAString (((\hsc_ptr -> hsc_ptr `plusPtr` 2)) p)
-{-# LINE 1116 "Types.hsc" #-}
+{-# LINE 1116 "Network/Socket/Types.hsc" #-}
         return (SockAddrUnix str)
 
-{-# LINE 1118 "Types.hsc" #-}
+{-# LINE 1118 "Network/Socket/Types.hsc" #-}
     (2) -> do
-{-# LINE 1119 "Types.hsc" #-}
+{-# LINE 1119 "Network/Socket/Types.hsc" #-}
         addr <- ((\hsc_ptr -> peekByteOff hsc_ptr 4)) p
-{-# LINE 1120 "Types.hsc" #-}
+{-# LINE 1120 "Network/Socket/Types.hsc" #-}
         port <- ((\hsc_ptr -> peekByteOff hsc_ptr 2)) p
-{-# LINE 1121 "Types.hsc" #-}
+{-# LINE 1121 "Network/Socket/Types.hsc" #-}
         return (SockAddrInet port addr)
     (30) -> do
-{-# LINE 1123 "Types.hsc" #-}
+{-# LINE 1123 "Network/Socket/Types.hsc" #-}
         port <- ((\hsc_ptr -> peekByteOff hsc_ptr 2)) p
-{-# LINE 1124 "Types.hsc" #-}
+{-# LINE 1124 "Network/Socket/Types.hsc" #-}
         flow <- ((\hsc_ptr -> peekByteOff hsc_ptr 4)) p
-{-# LINE 1125 "Types.hsc" #-}
+{-# LINE 1125 "Network/Socket/Types.hsc" #-}
         In6Addr addr <- ((\hsc_ptr -> peekByteOff hsc_ptr 8)) p
-{-# LINE 1126 "Types.hsc" #-}
+{-# LINE 1126 "Network/Socket/Types.hsc" #-}
         scope <- ((\hsc_ptr -> peekByteOff hsc_ptr 24)) p
-{-# LINE 1127 "Types.hsc" #-}
+{-# LINE 1127 "Network/Socket/Types.hsc" #-}
         return (SockAddrInet6 port flow addr scope)
     _ -> ioError $ userError $
       "Network.Socket.Types.peekSockAddr: address family '" ++
@@ -1324,7 +1324,7 @@ tupleToHostAddress6 (w7, w6, w5, w4, w3, w2, w1, w0) =
 
 s6_addr_offset :: Int
 s6_addr_offset = ((0))
-{-# LINE 1191 "Types.hsc" #-}
+{-# LINE 1191 "Network/Socket/Types.hsc" #-}
 
 peek32 :: Ptr a -> Int -> IO Word32
 peek32 p i0 = do
@@ -1351,16 +1351,13 @@ poke32 p i0 a = do
 newtype In6Addr = In6Addr HostAddress6
 
 
-{-# LINE 1217 "Types.hsc" #-}
-
-
-{-# LINE 1219 "Types.hsc" #-}
+{-# LINE 1219 "Network/Socket/Types.hsc" #-}
 
 instance Storable In6Addr where
     sizeOf _    = 16
-{-# LINE 1222 "Types.hsc" #-}
+{-# LINE 1222 "Network/Socket/Types.hsc" #-}
     alignment _ = 4
-{-# LINE 1223 "Types.hsc" #-}
+{-# LINE 1223 "Network/Socket/Types.hsc" #-}
 
     peek p = do
         a <- peek32 p 0

@@ -1,0 +1,76 @@
+#+TITLE: Simple Network Server
+
+* TODO Network Representation
+  The network representation, seen in `Lib/` is from the DeepWeb project:
+  https://arxiv.org/abs/1811.11911
+  https://github.com/DeepSpec/DeepWeb/tree/master/src/KvServer/common/Lib
+
+* IO Monad
+  The IO Monad is represented as an InteractionTree.
+
+  We take the approach of interpreting the IO Monad as a _state monad_ with 
+  a _World_ state. The definition of _World_ depends on the application.
+  In this case, we are interested in a simple network server, so the World
+  state will keep track of the state of the sockets and connections made
+  to the server.
+
+** TODO Composable effects
+   Because the ITree library provides the ability to compose events, we can define
+   ...   
+
+* Automated Effect Encoding
+  Haskell libraries provide effectful functions that have sleek abstraction barriers.
+  This means that having a one-to-one correspondence to a ""Haskell function event"" 
+  and an uninterpreted _InteractionTree event_ will not be terribly unwieldy.
+  
+  A scheme of automated generation of events is as follows: 
+
+  1. Take a high-level function in Haskell
+#+BEGIN_SRC
+send :: Socket -> IO ()
+#+END_SRC
+	
+  2. Create a corresponding uninterpreted ITree event
+#+BEGIN_SRC 
+     (* NetworkE -< IOE *)
+     Inductive NetworkE : Type -> Type :=
+     ...
+     | sendE : Socket -> NetworkE Unit
+#+END_SRC
+
+  3. Generate an embedded function, that will have the same type correspondence as the 
+     Haskell library function.
+#+BEGIN_SRC
+     Definition send : Socket -> IO unit := embed sendE. 
+#+END_SRC
+
+  4. Define appropriate `rewrite` in respective edit file. 
+
+  Done!
+
+** Questions
+*** How can we identify effectful Haskell functions? 
+    One naïve approach is to take all functions that go into the IO monad. 
+    However, there surely are different effects that we would like to model, such as 
+
+    1. Concurrency 
+    2. State Monad
+    3. Probably more...     
+
+    We could take an aggressive approach by translating all monads into ITrees, 
+    but concurrency can be modeled using _Applicative_...!
+*** TODO Look at base libraries
+*** TODO Primitive library (GHC.Base (look at edit files to see skipped files)) 
+*** TODO Manual files
+
+*** How do we interpret these effects?
+    This part certainly cannot be automated. We could leave this up to the programmers 
+    (read : mathematically-oriented, proof-loving developers) to define their own 
+    interpretation of the algebraic effects in Haskell programs. 
+    
+    *But*, for ~interesting~ effects, such as _Concurrency_ and _IO_, it doesn't seem 
+    crazy that `hs-to-coq` would provide interpretations of standard libraries that
+    handle them.
+
+* TODO Interpretation into StateT World (IO) 
+  

@@ -1,0 +1,2 @@
+axiomatize definition Network.Socket.ByteString.Lazy.getContents
+
