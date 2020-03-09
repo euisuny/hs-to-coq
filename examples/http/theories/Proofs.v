@@ -7,9 +7,9 @@ From Paco Require Import paco.
 Require GHC.Num.
 Require GHC.Base.
 Require Import Network.
+Require Import Network_.
 Require Import NetworkTypes.
 Require Import Main.
-Require Import Divergence.
 Require Import IO.
 
 Import ITree.Basics.Basics.Monads.

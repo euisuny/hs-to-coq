@@ -1,33 +1,122 @@
 include ../../common.mk
 
-# Edit this
-GENMODS = Main
-MANMODS = NetworkTypes Divergence IO Network Proofs
+OUT=lib
 
-# Abstract stuff
+# Handwritten modules (usually by modification of generated version)
+HANDMOD = \
+   state/Lens \
+   state/Decimal \
+   state/ITreePrelude \
+   state/Network \
+   state/Numbers \
+   state/Socket \
+	 state/SocketConstants \
+	 state/String \
+	 state/Util \
+	 IO \
+	 NetworkTypes \
+   Network_ 
 
-VFILES_GEN = $(addsuffix .v,$(subst .,/,$(GENMODS)))
-VFILES_MAN = $(addsuffix .v,$(MANMODS))
+# Generated modules
+MODULES =  \
+   Main
 
-VFILES   = $(VFILES_GEN) $(VFILES_MAN)
+# generated from drop-in/
+# DROPIN = \
+   MultiCore
 
-all: coq
 
-$(VFILES_GEN): %.v : %.hs edits  ../../base/edits
-	$(HS_TO_COQ) -e edits -p preamble.v -e ../../base/edits $< -o .
+VFILES_GEN       = $(addsuffix .v,$(MODULES))
+VFILES_MAN       = $(addsuffix .v,$(HANDMOD))
+# VFILES_DROPIN    = $(addsuffix .v,$(DROPIN))
 
-_CoqProject : Makefile
+
+VFILES   = $(VFILES_GEN) $(VFILES_MAN) $(VFILES_DROPIN)
+
+OUTFILES_GEN       = $(addprefix $(OUT)/,$(VFILES_GEN))
+OUTFILES_MAN       = $(addprefix $(OUT)/,$(VFILES_MAN))
+# OUTFILES_DROPIN    = $(addprefix $(OUT)/,$(VFILES_DROPIN))
+
+OUTFILES   = $(OUTFILES_GEN) $(OUTFILES_MAN) # $(OUTFILES_DROPIN)
+
+HSFILES     = $(addsuffix .hs,$(MODULES)) 
+HSFILESPATH = $(addprefix ./,$(HSFILES)) 
+
+all: vfiles coq
+
+vfiles: $(OUT)/edits  $(OUT)/README.md $(OUT)/Makefile $(OUTFILES)
+
+# This target is also used as a dependecy to ensure that $(OUT) exists.
+$(OUT)/README.md:
+	mkdir -p $(OUT)
+	mkdir -p deps
 	> $@
-	echo '-Q .               ""'		>> $@
-	echo '-Q ../../base-thy/ Proofs' >> $@
-	echo '-Q ../../base/     ""'		>> $@
-	echo $(VFILES)										>> $@
+	echo 'This directory contains a Coq’ified version of parts of GHC' >> $@
+	echo 'Do not edit files here! Instead, look in `examples/wc`.' >> $@
 
-Makefile.coq: _CoqProject
-	coq_makefile -f _CoqProject -o $@
+$(OUT)/edits:
+	mkdir -p $(OUT)
+	ln -fs ../edits $(OUT)/edits
 
-coq: Makefile.coq $(VFILES)
-	$(MAKE) -f Makefile.coq OPT=$(COQFLAGS)
+$(OUT)/_CoqProject: $(OUT)/README.md Makefile
+	> $@
+	echo '-Q . ""' >> $@
+	echo '-Q ../../../base ""' >> $@
+	echo '-Q ../../../base-thy  Proofs' >> $@
+	echo '-Q ../../containers/lib   ""' >> $@
+	echo '-Q ../../containers/theories  ""' >> $@
+	echo '-Q ../../transformers/lib  ""' >> $@
+	echo '-Q state/ ""' >> $@
+	echo $(filter-out $(addsuffix .v,$(BROKEN_MODULES)), $(VFILES)) >> $@
+
+$(OUT)/Makefile: $(OUT)/README.md $(OUT)/_CoqProject $(OUTFILES) Makefile
+	cd $(OUT); coq_makefile -f _CoqProject -o Makefile
+
+coq: $(OUT)/Makefile $(OUTFILES)
+	$(MAKE) -C $(OUT) -f Makefile OPT=$(COQFLAGS)
+
+
+HS_TO_COQ_OPTS=\
+     -i wc/src \
+     -e ../../base/edits \
+     -e ../containers/edits \
+     -e ../transformers/edits \
+     -e edits \
+     --iface-dir ../../base \
+     --iface-dir ../containers/lib \
+     --iface-dir ../transformers/lib \
+     --iface-dir $(OUT) \
+     --dependency-dir deps \
+     -N \
+
+-include deps/*.mk
+
+%.h2ci: %.v
+	test -e $@
+
+.SECONDEXPANSION:
+$(OUTFILES_GEN): $(OUT)/%.v : $$(wildcard module-edits/$$*/preamble.v) $$(wildcard module-edits/$$*/midamble.v)  $$(wildcard module-edits/$$*/edits) edits
+	$(HS_TO_COQ) $(addprefix -e , $(wildcard module-edits/$*/edits)) \
+	             $(addprefix -p , $(wildcard module-edits/$*/preamble.v)) \
+	             $(addprefix --midamble , $(wildcard module-edits/$*/midamble.v)) \
+							-p preamble.v \
+		     $(HS_TO_COQ_OPTS) -o $(OUT) $*.hs
+	test -e $@
+
+
+$(OUTFILES_MAN): $(OUT)/%.v : manual/%.v
+	mkdir -p "$$(dirname $(OUT)/$*.v)"
+	rm -f $@
+	lndir ../manual $(OUT)/
+
+
+$(OUTFILES_DROPIN): $(OUT)/%.v : $$(wildcard module-edits/$$*/preamble.v) $$(wildcard module-edits/$$*/midamble.v)  $$(wildcard module-edits/$$*/edits) drop-in/%.hs
+	$(HS_TO_COQ) $(addprefix -e , $(wildcard module-edits/$*/edits)) \
+	             $(addprefix -p , $(wildcard module-edits/$*/preamble.v)) \
+	             $(addprefix --midamble , $(wildcard module-edits/$*/midamble.v)) \
+		     $(HS_TO_COQ_OPTS) -o $(OUT) drop-in/$*.hs
 
 clean:
-	rm -f */*/*.vo */*/*.glob */*/*.v.d */*.vo */*.glob */*.v.d *.glob *.vo *.v.d _CoqProject Makefile.coq $(VFILES_GEN) */*.v~
+	rm -rf $(OUT)
+	rm -f *.aux *.log
+
