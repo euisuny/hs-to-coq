@@ -1,0 +1,79 @@
+<p>This artifact consists of all of our developments around the swap server discussed in our paper, including all the specifications, all the proofs, and the test suite.</p>
+<h1 id="installation">Installation</h1>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>You can either manually install all the dependencies, or use the docker image we have provided.</p>
+<h3 id="using-docker">Using Docker</h3>
+<pre class="shell"><code>docker run -it ysli/from-c-to-itree</code></pre>
+<h3 id="manual-installation">Manual Installation</h3>
+<p>Building this artifact requires the following software:</p>
+<ul>
+<li><p>OCaml (&gt;= 4.06.1).</p></li>
+<li><p>Coq 8.8.1 (8.8.2 might also works, but we have not tested that).</p></li>
+<li><p>CompCert 3.4 and VST (only to build the VST proofs and the final correctness theorem).</p></li>
+<li><p>QuickChick 1.0.2.</p></li>
+</ul>
+<h4 id="coq">Coq</h4>
+<p>You can either build Coq from <a href="https://github.com/coq/coq/releases/tag/V8.8.1">source</a>, or install it via opam:</p>
+<pre class="shell"><code>opam install coq.8.8.1</code></pre>
+<h4 id="compcert-and-vst">CompCert and VST</h4>
+<p>You can build CompCert from <a href="https://github.com/AbsInt/CompCert/releases/tag/v3.4">source</a> (by the time we submit this artifact, CompCert 3.4 is not available on opam). An installation instruction can be found <a href="http://compcert.inria.fr/man/manual002.html">here</a>.</p>
+<p>You can build VST from <a href="https://github.com/PrincetonUniversity/VST">source</a>. You will need to build it from the code on master branch. In particular, the code at commit 08759fd is the one we use. To build VST, simply download the source code and hit <code>make</code>.</p>
+<h4 id="quickchick">QuickChick</h4>
+<p>You can either build QuickChick from <a href="https://github.com/QuickChick/QuickChick/releases/tag/v1.0.2">source</a>, or install it via opam:</p>
+<pre class="shell"><code>opam install coq-quickchick.1.0.2</code></pre>
+<p>You may first need to add OPAM archive for Coq, if you haven't already:</p>
+<pre class="shell"><code>opam repo add coq-released https://coq.inria.fr/opam/released</code></pre>
+<h2 id="build-instructions">Build Instructions</h2>
+<h3 id="build-without-vst-proofs">Build Without VST Proofs</h3>
+<p>First, make sure you have Coq 8.8.1 and QuickChick 1.0.2 installed. Then, just hit <code>make</code> (or <code>make -j</code> to use parallel compilations).</p>
+<h3 id="build-with-vst-proofs">Build With VST Proofs</h3>
+<p>First, you will need to have VST installed (see <a href="#prerequisites">Prerequisites</a>). Then, you will need to change the first six lines in the <code>_CoqProject.Vst.Proofs</code> to put in your VST installation path.</p>
+<p>After that, rename the <code>_CoqProject.Vst.Proofs</code> file to <code>_CoqProject.Vst</code>, or:</p>
+<pre class="shell"><code>cp _CoqProject.Vst.Proofs _CoqProject.Vst</code></pre>
+<p>The rest is the same as the build instructions <a href="#build-without-vst-proofs">without VST proofs</a>.</p>
+<h3 id="tests">Tests</h3>
+<p>To run tests, simply type:</p>
+<pre class="shell"><code>make test</code></pre>
+<p>To only run the tests of implementation model (i.e. to test that the implementation model refines the linear specification), run:</p>
+<pre class="shell"><code>make test-impl-model</code></pre>
+<p>To only run the tests of C program (i.e. to test that the C program refines the linear specification), run:</p>
+<pre class="shell"><code>make test-c</code></pre>
+<h1 id="artifact-structure">Artifact Structure</h1>
+<p>All the code in this artifact is divided into four directories: <code>Spec</code>, <code>Proofs</code>, <code>Test</code>, and <code>Lib</code>. The names should be self-explanatory.</p>
+<p>We will go over the most important files in these directories here. More details can be found in those files as comments.</p>
+<h3 id="spec">Spec</h3>
+<p>The most important files in this directory are:</p>
+<ul>
+<li><code>Swap_LinearSpec.v</code>, which defines the linear specification of the swap server. This is Figure 3 in the paper.</li>
+<li><code>Swap_ImplModel.v</code>, which defines the implementation model of the swap server. See Figure 8 in the paper.</li>
+<li><code>TopLevelProp.v</code>, which defines <strong>Theorem 1</strong> (Figure 4) in the paper.</li>
+<li>Within the <code>VST</code> directory, <code>SocketSpecs.v</code> defines the VST separation logic axioms for the POSIX socket functions (e.g. the specification for <code>recv</code> in Figure 13 of the paper).</li>
+</ul>
+<h3 id="proofs">Proofs</h3>
+<p>This directory is further divided into two sub-directories:</p>
+<ul>
+<li>The <code>Vst</code> directory contains the proofs showing that the C program refines the implementation model. This directory contains many files. Most files starting with the <code>verif_</code> prefixes contain the proof of some particular functions suggested by their names. <code>verif_prog.v</code> is the top-level proof here which connects all the functions.</li>
+<li>The <code>Linear</code> directory contains the proofs showing that the implementation model refines the linear specification. The top-level proof here is contained in the end of <code>Top.v</code>.</li>
+</ul>
+<p><code>TopLevelProof.v</code> contains the proof of <strong>Theorem 1</strong> in the paper.</p>
+<h3 id="test">Test</h3>
+<p>This directory contains our test suite.</p>
+<ul>
+<li><code>TestC.v</code> defines the tests showing that the C program refines the linear specification.</li>
+<li><code>Client.v</code> is the client we used in testing to interact with the server.</li>
+<li><code>TestImplModel.v</code> defines the tests showing that the implementation model refines the linear specification.</li>
+</ul>
+<h3 id="lib">Lib</h3>
+<p>This directory contains the network model, the definition of network refinement, the effect types for the linear specification and implementation model, and so on.</p>
+<ul>
+<li><p><code>LinearSpec_Interface.v</code> gives an overview of the framework for our implementation model and linear specification. It illustrates:</p>
+<ul>
+<li><p>Effects for implementations (&quot;servers&quot;) and specifications (&quot;observers&quot;).</p></li>
+<li><p>Network model and network reordering.</p></li>
+<li><p>Network refinement, with facilities both for proving and testing.</p></li>
+</ul></li>
+</ul>
+<p>The implementation of the framework is spread across the <code>LinearSpec_*.v</code> modules (more details can be found in <code>LinearSpec_Interface.v</code>).</p>
+<ul>
+<li><code>NetworkInterface.v</code> defines the effects of socket operations used by the implementation model. <code>NetworkAdapter.v</code> provides a function <code>simplify_network</code> to translate these to effects from <code>LinearSpec_Server.v</code> used by the definition of network refinement, which is <code>implE</code> in the paper. Ultimately <code>NetworkInterface.v</code> will be phased out, so that the implementation model is over <code>implE</code> as per the paper.</li>
+</ul>

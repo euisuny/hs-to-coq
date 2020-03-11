@@ -1,0 +1,29 @@
+- Summary, main interfaces:
+    SimpleSpec.v
+
+- Server interface:
+    SimpleSpec_NetworkInterface.v
+
+- Observer interface:
+    SimpleSpec_Observer.v
+ 
+    also defines "is_trace_of" predicate (maybe needs to move)
+
+- Definition of traces and scrambling:
+    SimpleSpec_Traces.v
+
+- State machine to model the network (needed by SimpleSpec_Traces):
+    SimpleSpec_NetworkModel.v
+
+- General correctness properties [refines_mod_network] and
+  [strong_refines_mod_network]:
+    SimpleSpec_Refinement.v
+
+- Some facts to prove the equivalence between these two properties:
+    SimpleSpec_Scramble.v
+
+- Given a scrambled trace, search for descramblings: 
+    SimpleSpec_Descramble.v
+
+- Given a server, enumerate/sample its traces:
+    SimpleSpec_ServerTraces.v

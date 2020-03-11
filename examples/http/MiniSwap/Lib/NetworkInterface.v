@@ -1,12 +1,20 @@
 Generalizable Variable E.
 Typeclasses eauto := 6.
 
-
-From Coq Require Import List ZArith String.
-
-Require Import Util ITreePrelude.
-
+From Coq Require Import List ZArith.
 Import ListNotations.
+
+From QuickChick Require Import
+     Decidability Show.
+
+From Custom Require Import String.
+
+Require Import DeepWeb.Free.Monad.Free.
+Import MonadNotations.
+Require Import DeepWeb.Free.Monad.Common.
+Import SumNotations.
+
+Require Import DeepWeb.Lib.Util.
 
 (* begin hide *)
 Set Warnings "-extraction-opaque-accessed,-extraction".
@@ -14,32 +22,24 @@ Set Warnings "-extraction-opaque-accessed,-extraction".
 
 Module Export Network.
 
-Variant connection_id : Type := Connection (c : nat).
-
-Definition eqb_connection_id :
-  forall c1 c2 : connection_id, {c1 = c2} + {c1 <> c2}.
-Proof.
-  intros [] [].
-  destruct (c =? c0) eqn:H; auto.
-  - apply beq_nat_true in H.
-    subst; auto.
-  - apply beq_nat_false in H.
-    right.
-    unfold not; intros conn_eq; inversion conn_eq; contradiction.
-Defined.
-
 Record endpoint_id : Type := Endpoint
   { port_number : Z;
   }.
+
+Program Instance Eq_endpoint_id : Dec_Eq endpoint_id := _.
+Next Obligation.
+intros; dec_eq. Defined.
+
+Instance Show_endpoint_id : Show endpoint_id :=
+  { show := fun '(Endpoint p) => show p }.
 
 (* Dummy value for the endpoint (ignored). *)
 Definition dummy_endpoint : endpoint_id
   := Endpoint 0.
 
-Variant networkE : Type -> Type :=
+Inductive networkE : Type -> Type :=
 | Listen : endpoint_id -> networkE unit
 | Accept : endpoint_id -> networkE connection_id
-| Close : connection_id -> networkE unit
 | Shutdown : connection_id -> networkE unit
 | RecvByte : connection_id -> networkE byte
 | SendByte : connection_id -> byte -> networkE unit.
@@ -53,9 +53,6 @@ Definition accept `{networkE -< E}
 Definition shutdown `{networkE -< E}
   : connection_id -> itree E unit := embed Shutdown.
 
-Definition close `{networkE -< E}
-  : connection_id -> itree E unit := embed Close.
-
 Definition recv_byte `{networkE -< E}
   : connection_id -> itree E byte := embed RecvByte.
 
@@ -65,14 +62,14 @@ Definition send_byte `{networkE -< E}
 (* Helper for [recv]. *)
 Fixpoint recv' `{networkE -< E} `{nondetE -< E}
          (c : connection_id) (len : nat) : itree E bytes :=
-  (match len with
+  match len with
   | O => ret ""
   | S len =>
     b <- recv_byte c ;;
-    or (ret (String b ""))
+    or (ret (b ::: ""))
        (bs <- recv' c len ;;
-        ret (String b bs))
-  end)%string.
+        ret (b ::: bs))
+  end%string.
 
 (* Receive a string of length at most [len].
    The return value [None] signals that a connection was closed,
@@ -88,17 +85,8 @@ Definition recv_full `{networkE -< E}
            (c : connection_id) (len : nat) : itree E bytes :=
   replicate_bytes len (recv_byte c).
 
-Fixpoint send `{networkE -< E} `{nondetE -< E}
-         (c : connection_id) (bs : bytes) : itree E nat :=
-  match bs with
-  | EmptyString => ret 0
-  | String b bs =>
-    or (ret 0)
-       (send_byte c b ;; n <- send c bs ;; ret (S n))
-  end.
-
 (* Send all bytes in a bytestring. *)
-Definition send_full `{networkE -< E}
+Definition send `{networkE -< E}
            (c : connection_id) (bs : bytes) : itree E unit :=
   for_bytes bs (send_byte c).
 
@@ -118,6 +106,13 @@ Proof.
     omega.
   - simpl in H; destruct H; omega + contradiction.
 Qed.
+
+Definition send_any_prefix (conn : connection_id) (msg : string)
+           `{nondetE -< E} `{failureE -< E} `{networkE -< E} :
+  itree E nat :=
+  len <- choose (range (String.length msg + 1)) ;;
+  send conn (substring 0 len msg) ;;
+  ret len.
 
 End Network.
 

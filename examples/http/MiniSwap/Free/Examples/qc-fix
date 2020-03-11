@@ -1,0 +1,52 @@
+#!/bin/sh
+
+# Explanation of the hack
+#
+# First, QuickChick currently uses "monolithic extraction", which
+# assumes everything it needs is in one file. Instead, we use
+# `Separate Extraction` which recursively extracts modules that
+# the target definition depends on.
+#
+# Second, there seems to be a bug in Coq's extraction mechanism
+# as there is one line in the extracted code which doesn't typecheck.
+# A `sed` script serves as a temporary fix.
+
+set -e
+
+# Move in a separate directory to avoid polluting the root
+
+mkdir -p build/
+cd build/
+
+# `RunMe.v` is a wrapper for extraction;
+# it expects a checker called `the_spec` in `Examples.v`.
+# To target another module, just change the definition of
+# `RunMe.out_spec` accordingly.
+
+coqc -Q ../ Experiments ../RunMe.v
+
+# We work around an extraction bug by manually fixing
+# the incorrect line of code.
+
+if [ -f Examples.mli ] ; then
+  sed -e "/and ('event, 'x) __coq_M = ('event, 'x) Free\.coq_M =/s/Free\.coq_M/Free.__coq_M/" -i Examples.mli
+fi
+
+# Extraction produces an OCaml `char list` value.
+# This generates the code to print it.
+
+runner=QCRunner
+cat > $runner.ml << EOF
+let _ = print_bytes (
+let l = RunMe.spec_out in
+let s = Bytes.create (List.length l) in
+let rec copy i = function
+| [] -> s
+| c :: l -> Bytes.set s i c; copy (i+1) l
+in copy 0 l)
+EOF
+
+# Compile and run.
+
+ocamlbuild $runner.native
+./$runner.native

@@ -153,13 +153,6 @@ Definition network_refines impl spec : Prop :=
     network_refines (linear_spec app).
 *)
 
-Theorem runConn_terminates:
-  forall s, not (divergence (runConn s)).
-Proof.
-  intro.
-  intro. inversion H. inversion paco_observe. inversion SIM.
-  destruct s. Admitted.
-
 (* Network.socket NetworkTypes.AF_INET NetworkTypes.Stream #0 GHC.Base.>>=
   (fun sock =>
      Network.setSocketOption sock NetworkTypes.ReuseAddr #1 GHC.Base.>>
@@ -186,15 +179,3 @@ Qed.
    messages = list (Socket * Base.String)
  *)
 
-Section invariants.
-
-  Context {E : Type -> Type}.
-  Inductive world_invariant : stateT world (itree E) unit -> Prop :=.
-
-  Theorem runConn_preserves_world_invariant:
-  forall s,
-    world_invariant (interp_io (runConn s)).
-  Proof.
-  Admitted.
-
-End invariants.
