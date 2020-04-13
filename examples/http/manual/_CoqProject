@@ -8,6 +8,5 @@
 -Q ../MiniSwap/Spec DeepWeb.Spec
 -Q ../MiniSwap/Custom Custom
 -Q ../MiniSwap/Free/Monad DeepWeb.Free.Monad
--Q ./state ""
 
-NetworkTypes.v Network_.v IO.v Map.v 
+StringLib.v ServerDefs.v SpecEffect.v NetworkTypes.v LinearSpec.v IO.v Network_.v

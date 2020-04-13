@@ -6,7 +6,7 @@ rename type GHC.Types.IO = IO.IO
 
 
 # Ad-hoc "Axiomatization" of Network library
-rename type Network.Socket.Types.Socket = NetworkTypes.Socket
+rename type Network.Socket.Types.Socket = IO.Socket
 rename type Network.Socket.Types.SockAddr = NetworkTypes.SockAddr
 rename value Network.Socket.Types.AF_INET = NetworkTypes.AF_INET
 rename value Network.Socket.Types.Stream = NetworkTypes.Stream
@@ -24,8 +24,8 @@ rename value Network.Socket.setSocketOption = Network_.setSocketOption
 rename value Network.Socket.socket = Network_.socket
 
 # Rewrite non-terminating loop with forever combinator.
-redefine Definition Main.mainLoop : NetworkTypes.Socket -> IO.IO unit :=
-  fun (sock : NetworkTypes.Socket) => @ITree.forever IO.ioE unit unit
+redefine Definition Main.mainLoop : IO.Socket -> IO.IO unit :=
+  fun (sock : IO.Socket) => @ITree.forever IO.haskE unit unit
     (Network_.accept sock GHC.Base.>>= (fun conn => runConn conn)).
 
 # Hacky work-around from the fact that hs-to-coq doesn't realize that

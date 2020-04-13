@@ -17,7 +17,6 @@ Module SocketModel.
 
   Open Scope Z.
 
-  (* Too abstract?? *)
   Parameter is_fd: Z -> Prop.
   Axiom fd_bound: forall i, is_fd i -> 0 <= i <= MAX_FD.
   Axiom zero_is_fd : is_fd 0.

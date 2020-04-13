@@ -28,15 +28,14 @@ Import GHC.Num.Notations.
 
 (* Converted value declarations: *)
 
-Definition runConn
-   : (NetworkTypes.Socket * NetworkTypes.SockAddr)%type -> IO.IO unit :=
+Definition runConn : (IO.Socket * NetworkTypes.SockAddr)%type -> IO.IO unit :=
   fun '(pair sock _) =>
     Network_.send sock (GHC.Base.hs_string__ "Hello World!") GHC.Base.>>
     Network_.close sock.
 
-Definition mainLoop : NetworkTypes.Socket -> IO.IO unit :=
-  fun (sock : NetworkTypes.Socket) =>
-    (@ITree.forever IO.ioE unit unit (Network_.accept sock GHC.Base.>>=
+Definition mainLoop : IO.Socket -> IO.IO unit :=
+  fun (sock : IO.Socket) =>
+    (@ITree.forever IO.haskE unit unit (Network_.accept sock GHC.Base.>>=
       (fun conn => runConn conn))).
 
 Definition main : IO.IO unit :=
@@ -49,8 +48,8 @@ Definition main : IO.IO unit :=
 
 (* External variables:
      op_zt__ pair unit GHC.Base.op_zgzg__ GHC.Base.op_zgzgze__ GHC.Num.fromInteger
-     IO.IO IO.ioE ITree.forever NetworkTypes.AF_INET NetworkTypes.ReuseAddr
-     NetworkTypes.SockAddr NetworkTypes.SockAddrInet NetworkTypes.Socket
+     IO.IO IO.Socket IO.haskE ITree.forever NetworkTypes.AF_INET
+     NetworkTypes.ReuseAddr NetworkTypes.SockAddr NetworkTypes.SockAddrInet
      NetworkTypes.Stream NetworkTypes.iNADDR_ANY Network_.accept Network_.bind
      Network_.close Network_.listen Network_.send Network_.setSocketOption
      Network_.socket
